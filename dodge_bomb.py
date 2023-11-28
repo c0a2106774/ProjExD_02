@@ -13,7 +13,18 @@ delat={
     pg.K_RIGHT:(+5,0)
 }
 
-
+def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
+    """
+    引数：こうかとんRect or 爆弾Rect
+    戻り値：横方向・縦方向の真理値タプル（True：画面内／False：画面外）
+    Rectオブジェクトのleft, right, top, bottomの値から画面内・外を判断する
+    """
+    yoko,tate = True,True
+    if rct.left < 0 or WIDTH < rct.right:
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:
+        tate = False
+    return (yoko,tate)
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -37,6 +48,9 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+        if kk_rct.colliderect(bb_rct):
+            print("ゲームオーバー")
+            return
         key_lst = pg.key.get_pressed()
         sum_mv= [0,0]
         for k,tpl in delat.items():
@@ -44,10 +58,20 @@ def main():
                 sum_mv[0] += tpl[0]
                 sum_mv[1] += tpl[1]
         screen.blit(bg_img, [0, 0])
-        screen.blit(kk_img, [900, 400])
-        screen.blit(bb_img,bb_rct)
+
+        kk_rct.move_ip(sum_mv[0], sum_mv[1])
+        if check_bound(kk_rct) != (True,True):
+            kk_rct.move_ip(sum_mv[0], -sum_mv[1])
+            
+        screen.blit(kk_img, kk_rct)        
         bb_rct.move_ip(vx,vy)
-        kk_rct.move_ip(sum_mv,sum_mv)
+        yoko,tate= check_bound(bb_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
+        screen.blit(bb_img,bb_rct)
+        
         pg.display.update()
         tmr += 1
         clock.tick(10)
