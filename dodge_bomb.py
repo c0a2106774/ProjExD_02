@@ -13,6 +13,7 @@ delat={
     pg.K_RIGHT:(+5,0)
 }
 
+
 def check_bound(rct: pg.Rect) -> tuple[bool,bool]:
     """
     引数：こうかとんRect or 爆弾Rect
@@ -30,16 +31,25 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
+    kk_img2 = pg.image.load("ex02/fig/8.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
-    bb_img = pg.Surface((20,20)) #練習1:透明のSurfaceの円を作る
-    pg.draw.circle(bb_img,(255,0,0),(10,10),10) #練習1: 赤い円を描く
+    kk_img2 = pg.transform.rotozoom(kk_img2, 0, 2.0)
+    bb_img = pg.Surface((20,20))
+    bb_img.set_colorkey((0, 0, 0))  # 練習１：黒い部分を透明にする
+    pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10)
+    #accs = [a for a in range(1, 11)]
+    ##for r in range(1, 11):
+        ##bb_img = pg.Surface((20*r, 20*r))
+        ##pg.draw.circle(bb_img,(255,0,0),(10*r, 10*r), 10*r)
+        ##bb_imgs.append(bb_img)
+        
     bb_img.set_colorkey((0,0,0)) #透過
     kk_rct= kk_img.get_rect()
     kk_rct.center = 900,400
     bb_rct = bb_img.get_rect()
     bb_rct.centerx = random.randint(0,WIDTH)
     bb_rct.centery = random.randint(0,HEIGHT)
-
+        
     vx = +5
     vy = +5   
     clock = pg.time.Clock()
@@ -49,6 +59,8 @@ def main():
             if event.type == pg.QUIT: 
                 return
         if kk_rct.colliderect(bb_rct):
+            screen.blit(kk_img2,kk_rct)
+            pg.display.update()
             print("ゲームオーバー")
             return
         key_lst = pg.key.get_pressed()
@@ -63,7 +75,9 @@ def main():
         if check_bound(kk_rct) != (True,True):
             kk_rct.move_ip(sum_mv[0], -sum_mv[1])
             
-        screen.blit(kk_img, kk_rct)        
+        screen.blit(kk_img, kk_rct)  
+        #avx, avy = vx*accs[min(tmr//500,9)], vy*accs[min(tmr//500, 9)]
+        #bb_img = bb_imgs[min(tmr//500, 9)]      
         bb_rct.move_ip(vx,vy)
         yoko,tate= check_bound(bb_rct)
         if not yoko:
