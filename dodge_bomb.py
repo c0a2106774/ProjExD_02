@@ -101,7 +101,7 @@ def main():
         screen.blit(bb_img,bb_rct)
         bb_rct.move_ip(vx,vy)
         pg.display.update()
-        tmr += 200
+        tmr += 50
         clock.tick(10)
 
 
