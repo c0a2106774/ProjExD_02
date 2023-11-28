@@ -47,13 +47,7 @@ def main():
     bb_img = pg.Surface((20, 20))   # 練習１：透明のSurfaceを作る
     bb_img.set_colorkey((0, 0, 0))  # 練習１：黒い部分を透明にする
     pg.draw.circle(bb_img, (255, 0, 0), (10, 10), 10) 
-    #bb_imgs= []
-    #for r in range(1, 11):
-        #bb_img = pg.Surface((20*r, 20*r))
-        #pg.draw.circle(bb_img,(255,0,0),(10*r, 10*r), 10*r)
-        #bb_img.set_colorkey((0,0,0))
-        #bb_imgs.append(bb_img)
-    
+    accs = [a for a in range(1,11)]
     kk_rct= kk_img.get_rect()
     kk_rct.center = 900,400
     bb_rct = bb_img.get_rect()
@@ -95,18 +89,19 @@ def main():
             if kk_0 != 0 or kk_1 !=0:
                 kk_img=kk_imgs[kk_0,kk_1]
             
-        screen.blit(kk_img, kk_rct)       
-        bb_rct.move_ip(vx,vy)
+        screen.blit(kk_img, kk_rct)
+        avx,avy = vx*accs[min(tmr//500, 9)], vy*accs[min(tmr//500, 9)]
+        bb_rct.move_ip(avx,avy)
+
         yoko,tate= check_bound(bb_rct)
         if not yoko:
             vx *= -1
         if not tate:
             vy *= -1
-        #bb_img = bb_imgs[min(tmr//500, 9)] 
         screen.blit(bb_img,bb_rct)
-        
+        bb_rct.move_ip(vx,vy)
         pg.display.update()
-        tmr += 1
+        tmr += 200
         clock.tick(10)
 
 
