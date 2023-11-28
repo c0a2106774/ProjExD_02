@@ -1,8 +1,10 @@
 import sys
+import random
 import pygame as pg
 
 
-WIDTH, HEIGHT = 1400, 800
+
+WIDTH, HEIGHT = 1600, 900
 
 
 def main():
@@ -11,6 +13,13 @@ def main():
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    bb_img = pg.Surface((20,20)) #練習1:透明のSurfaceの円を作る
+    pg.draw.circle(bb_img,(255,0,0),(10,10),10) #練習1: 赤い円を描く
+    bb_img.set_colorkey((0,0,0)) #透過
+    bb_rct = bb_img.get_rect()
+    bb_rct.centerx = random.randint(0,WIDTH)
+    bb_rct.centery = random.randint(0,HEIGHT)
+        
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -20,6 +29,7 @@ def main():
 
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
+        screen.blit(bb_img,bb_rct)
         pg.display.update()
         tmr += 1
         clock.tick(10)
